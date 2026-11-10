@@ -228,7 +228,11 @@ footer{padding:44px 0 64px;text-align:center;color:var(--txt3);font-size:13px;bo
   section{padding:70px 0}
   .caminho{grid-template-columns:44px 1fr}
   .caminho .tag{grid-column:2;justify-self:start;margin-top:6px}
-  .f-painel,.f-chat{display:none}
+  /* No celular a vitrine mostra só o painel, centralizado e inteiro */
+  .tela{aspect-ratio:4/5}
+  .f-chat{display:none}
+  .f-barra{top:5%;width:92%;margin-left:-46%}
+  .f-painel{left:50%;transform:translateX(-50%);bottom:4%;width:56%;animation:none}
 }
 </style>
 </head>
