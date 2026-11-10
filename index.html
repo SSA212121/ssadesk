@@ -266,15 +266,15 @@ fetch('https://api.github.com/repos/SSA212121/ssadesk/releases/latest').then(r =
   if (v) document.getElementById('verWin').textContent = v
   if (d.published_at) document.getElementById('dataWin').textContent = new Date(d.published_at).toLocaleDateString('pt-BR')
   const nomes = (d.assets || []).map(a => a.name)
-  const temArm = nomes.includes('SSAdesk-mac-arm64.dmg')
-  const temIntel = nomes.includes('SSAdesk-mac-x64.dmg')
-  if (!temArm && !temIntel) {
-    for (const id of ['macArm', 'macIntel']) {
-      const b = document.getElementById(id)
-      b.style.opacity = '.45'; b.style.pointerEvents = 'none'; b.removeAttribute('href')
-    }
-    document.getElementById('notaMac').innerHTML = '<b>Em preparação.</b> A versão para Mac aparece aqui assim que ficar pronta.'
+  const faltando = []
+  for (const [id, arq, nome] of [['macArm', 'SSAdesk-mac-arm64.dmg', 'chip Apple'], ['macIntel', 'SSAdesk-mac-x64.dmg', 'Intel']]) {
+    if (nomes.includes(arq)) continue
+    faltando.push(nome)
+    const b = document.getElementById(id)
+    b.style.opacity = '.45'; b.style.pointerEvents = 'none'; b.removeAttribute('href')
   }
+  if (faltando.length === 2) document.getElementById('notaMac').innerHTML = '<b>Em preparação.</b> A versão para Mac aparece aqui assim que ficar pronta.'
+  else if (faltando.length === 1) document.getElementById('notaMac').innerHTML = 'A versão para Mac com <b>' + faltando[0] + '</b> ainda está em preparação.'
 }).catch(() => {})
 // Destaca o sistema de quem está visitando
 const ua = navigator.userAgent
