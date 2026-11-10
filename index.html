@@ -213,17 +213,17 @@ footer{padding:40px 0 60px;text-align:center;color:var(--txt3);font-size:13px;bo
             <a class="pilula baixar principal" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-Setup.exe">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar para Windows</a>
           </div>
-          <small>Arquivo .exe · cerca de 165 MB</small>
+          <small>Versão <b id="verWin">4.5.0</b> · <span id="dataWin">10/11/2026</span> · .exe, 164 MB</small>
         </div>
         <div class="so" id="cartaoMac">
           <header><svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.6zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg><h3>Mac</h3></header>
           <p>Para macOS 12 ou mais novo. Nesta primeira versão, o Mac acessa computadores Windows.</p>
           <div class="opcoes">
-            <a class="pilula baixar principal" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-mac-arm64.dmg">
+            <a class="pilula baixar principal" id="macArm" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-mac-arm64.dmg">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Mac com chip Apple (M1, M2…)</a>
-            <a class="pilula baixar secundario" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-mac-x64.dmg">Mac com processador Intel</a>
+            <a class="pilula baixar secundario" id="macIntel" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-mac-x64.dmg">Mac com processador Intel</a>
           </div>
-          <small>Arquivo .dmg · Não sabe qual? Menu  › Sobre Este Mac.</small>
+          <small id="notaMac">Arquivo .dmg · Não sabe qual? Menu  › Sobre Este Mac.</small>
         </div>
       </div>
 
@@ -259,6 +259,23 @@ footer{padding:40px 0 60px;text-align:center;color:var(--txt3);font-size:13px;bo
 
 <script>
 document.getElementById('ano').textContent = new Date().getFullYear()
+
+// Versão e arquivos disponíveis, lidos da página de downloads do GitHub
+fetch('https://api.github.com/repos/SSA212121/ssadesk/releases/latest').then(r => r.json()).then(d => {
+  const v = String(d.tag_name || '').replace(/^v/, '')
+  if (v) document.getElementById('verWin').textContent = v
+  if (d.published_at) document.getElementById('dataWin').textContent = new Date(d.published_at).toLocaleDateString('pt-BR')
+  const nomes = (d.assets || []).map(a => a.name)
+  const temArm = nomes.includes('SSAdesk-mac-arm64.dmg')
+  const temIntel = nomes.includes('SSAdesk-mac-x64.dmg')
+  if (!temArm && !temIntel) {
+    for (const id of ['macArm', 'macIntel']) {
+      const b = document.getElementById(id)
+      b.style.opacity = '.45'; b.style.pointerEvents = 'none'; b.removeAttribute('href')
+    }
+    document.getElementById('notaMac').innerHTML = '<b>Em preparação.</b> A versão para Mac aparece aqui assim que ficar pronta.'
+  }
+}).catch(() => {})
 // Destaca o sistema de quem está visitando
 const ua = navigator.userAgent
 const ehMac = /Macintosh|Mac OS X/.test(ua) && !/iPhone|iPad/.test(ua)
