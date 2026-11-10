@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSAdesk — Acesso remoto seguro</title>
+<meta name="description" content="SSAdesk: acesso remoto, chamada de vídeo, chat e lousa. Sem servidores, criptografado de ponta a ponta. Grátis para Windows e Mac.">
+<link rel="icon" href="icone.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070f; --bg2:#0b1020; --txt:#f5f7fb; --txt2:rgba(235,240,255,.66); --txt3:rgba(235,240,255,.42);
+  --vidro:rgba(255,255,255,.06); --borda:rgba(255,255,255,.12); --azul:#0a84ff; --azul2:#5ac8fa; --verde:#30d158;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,"SF Pro Display","Inter",system-ui,sans-serif;background:var(--bg);color:var(--txt);
+  -webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.brilho{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 50% at 15% 10%,rgba(10,132,255,.28),transparent 70%),
+             radial-gradient(50% 45% at 90% 20%,rgba(175,82,222,.22),transparent 70%),
+             radial-gradient(60% 50% at 50% 100%,rgba(90,200,250,.14),transparent 70%),var(--bg)}
+.envolve{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* Topo */
+header{position:sticky;top:0;z-index:10;backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  background:rgba(5,7,15,.55);border-bottom:.5px solid var(--borda)}
+header .envolve{display:flex;align-items:center;justify-content:space-between;height:60px}
+.marca{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.marca img{width:30px;height:30px;border-radius:8px}
+nav{display:flex;gap:26px;font-size:14px;color:var(--txt2)}
+nav a:hover{color:var(--txt)}
+.pilula{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;font-weight:600;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .2s,box-shadow .2s}
+.pilula:active{transform:scale(.96)}
+.pilula.pequena{padding:8px 16px;font-size:14px;background:var(--azul)}
+.pilula.pequena:hover{background:#2b95ff}
+
+/* Herói */
+.heroi{text-align:center;padding:96px 0 64px}
+.selo{display:inline-flex;gap:8px;align-items:center;padding:6px 14px;border-radius:999px;font-size:13px;color:var(--txt2);
+  background:var(--vidro);border:.5px solid var(--borda);backdrop-filter:blur(20px)}
+.selo i{width:7px;height:7px;border-radius:50%;background:var(--verde);box-shadow:0 0 10px var(--verde)}
+h1{font-size:clamp(40px,7vw,76px);line-height:1.04;letter-spacing:-.035em;font-weight:800;margin:22px auto 18px;max-width:900px}
+h1 span{background:linear-gradient(90deg,var(--azul2),var(--azul) 45%,#bf5af2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.heroi p.sub{font-size:clamp(17px,2.2vw,21px);color:var(--txt2);max-width:640px;margin:0 auto}
+.botoes{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:36px}
+.baixar{padding:16px 28px;font-size:17px;min-width:230px}
+.baixar svg{width:20px;height:20px}
+.baixar.principal{background:linear-gradient(180deg,#2b95ff,var(--azul));box-shadow:0 10px 30px rgba(10,132,255,.35)}
+.baixar.principal:hover{box-shadow:0 14px 40px rgba(10,132,255,.5)}
+.baixar.secundario{background:var(--vidro);border:.5px solid var(--borda);backdrop-filter:blur(20px)}
+.baixar.secundario:hover{background:rgba(255,255,255,.1)}
+.nota{margin-top:16px;font-size:13px;color:var(--txt3)}
+
+/* Janela de exemplo */
+.vitrine{margin:56px auto 0;max-width:880px;border-radius:22px;padding:14px;background:var(--vidro);border:.5px solid var(--borda);
+  backdrop-filter:blur(30px);box-shadow:0 40px 120px rgba(0,0,0,.5)}
+.tela{position:relative;border-radius:12px;aspect-ratio:16/9;overflow:hidden;
+  background:radial-gradient(80% 70% at 30% 30%,#1b3a6b,#0b1222 70%)}
+.barrinha{position:absolute;top:14px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;
+  padding:7px 8px 7px 8px;border-radius:999px;background:rgba(28,28,30,.78);border:.5px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(30px);box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap}
+.barrinha .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(180deg,#5ac8fa,#007aff);display:grid;place-items:center;font-weight:700;font-size:14px}
+.barrinha .q{font-size:12px;text-align:left;line-height:1.25;margin-right:6px}
+.barrinha .q small{display:block;color:var(--txt2);font-size:10.5px}
+.barrinha b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center}
+.barrinha b svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.barrinha b.x{background:#ff3b30}
+.cartao-chat{position:absolute;right:18px;bottom:18px;width:34%;border-radius:14px;padding:12px;background:rgba(28,28,30,.72);
+  border:.5px solid rgba(255,255,255,.12);backdrop-filter:blur(30px);font-size:12px}
+.balao{padding:7px 11px;border-radius:14px;margin-top:7px;width:fit-content;max-width:90%}
+.balao.eu{background:var(--azul);margin-left:auto}
+.balao.ele{background:rgba(255,255,255,.12)}
+.traco{position:absolute;left:12%;top:58%;width:38%;height:4px;border-radius:4px;background:#ff453a;transform:rotate(-8deg);box-shadow:0 0 12px rgba(255,69,58,.6)}
+
+/* Recursos */
+section{padding:88px 0}
+h2{font-size:clamp(30px,4.5vw,48px);letter-spacing:-.03em;line-height:1.1;text-align:center;font-weight:800}
+.lead{color:var(--txt2);text-align:center;max-width:620px;margin:14px auto 0;font-size:18px}
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.card{padding:26px;border-radius:20px;background:var(--vidro);border:.5px solid var(--borda);backdrop-filter:blur(30px);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s}
+.card:hover{transform:translateY(-4px);background:rgba(255,255,255,.08)}
+.ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px}
+.ic svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:18px;letter-spacing:-.01em;margin-bottom:6px}
+.card p{color:var(--txt2);font-size:15px}
+
+/* Downloads */
+.downloads{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:44px}
+.so{padding:30px;border-radius:24px;background:var(--vidro);border:.5px solid var(--borda);backdrop-filter:blur(30px);display:flex;flex-direction:column}
+.so.destaque{border-color:rgba(10,132,255,.6);box-shadow:0 0 0 1px rgba(10,132,255,.25),0 20px 60px rgba(10,132,255,.15)}
+.so header{all:unset;display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.so header svg{width:34px;height:34px;fill:#fff}
+.so h3{font-size:24px;letter-spacing:-.02em}
+.so p{color:var(--txt2);font-size:15px;margin-bottom:22px;flex:1}
+.so .opcoes{display:flex;flex-direction:column;gap:10px}
+.so .pilula{padding:14px 20px;font-size:16px}
+.so small{color:var(--txt3);font-size:12.5px;margin-top:12px;display:block}
+.passos{counter-reset:p;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+.passo{padding:24px;border-radius:20px;background:var(--vidro);border:.5px solid var(--borda)}
+.passo::before{counter-increment:p;content:counter(p);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(180deg,#5ac8fa,#007aff);font-weight:700;margin-bottom:14px}
+.passo h3{font-size:17px;margin-bottom:4px}
+.passo p{color:var(--txt2);font-size:14.5px}
+details{max-width:760px;margin:12px auto 0;border-radius:16px;background:var(--vidro);border:.5px solid var(--borda);padding:18px 22px}
+details summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+details summary::after{content:"+";color:var(--txt2);font-size:20px;line-height:1}
+details[open] summary::after{content:"–"}
+details p,details li{color:var(--txt2);font-size:15px;margin-top:10px}
+details ol{padding-left:20px}
+footer{padding:40px 0 60px;text-align:center;color:var(--txt3);font-size:13px;border-top:.5px solid var(--borda)}
+:focus-visible{outline:2px solid var(--azul);outline-offset:3px;border-radius:12px}
+
+@media (max-width:860px){
+  .grade,.passos{grid-template-columns:1fr 1fr}
+  .downloads{grid-template-columns:1fr}
+  nav{display:none}
+}
+@media (max-width:560px){
+  .grade,.passos{grid-template-columns:1fr}
+  .heroi{padding:64px 0 40px}
+  .baixar{width:100%}
+  .barrinha .q,.cartao-chat{display:none}
+}
+</style>
+</head>
+<body>
+<div class="brilho"></div>
+
+<header>
+  <div class="envolve">
+    <a class="marca" href="#"><img src="icone.png" alt="">SSAdesk</a>
+    <nav><a href="#recursos">Recursos</a><a href="#seguranca">Segurança</a><a href="#baixar">Baixar</a><a href="#ajuda">Ajuda</a></nav>
+    <a class="pilula pequena" href="#baixar">Baixar grátis</a>
+  </div>
+</header>
+
+<main>
+  <div class="envolve heroi">
+    <span class="selo"><i></i>Grátis · Windows e Mac</span>
+    <h1>Acesso remoto <span>simples e seguro</span>.</h1>
+    <p class="sub">Controle outro computador, faça chamadas de vídeo, converse e desenhe na tela. Sem servidores no meio, criptografado de ponta a ponta.</p>
+    <div class="botoes">
+      <a class="pilula baixar principal" id="botaoPrincipal" href="#baixar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        <span id="textoPrincipal">Baixar o SSAdesk</span>
+      </a>
+      <a class="pilula baixar secundario" href="#recursos">Conhecer os recursos</a>
+    </div>
+    <p class="nota" id="notaSo">Disponível para Windows 10/11 e macOS 12 ou mais novo.</p>
+
+    <div class="vitrine" aria-hidden="true">
+      <div class="tela">
+        <div class="barrinha">
+          <span class="av">S</span><span class="q">Samuel<small>Conectado · rede local</small></span>
+          <b><svg viewBox="0 0 24 24"><path d="M20.5 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8"/></svg></b>
+          <b><svg viewBox="0 0 24 24"><path d="M12 4.5c4.7 0 8.5 3.1 8.5 7s-3.8 7-8.5 7c-.9 0-1.8-.1-2.6-.3L5 20l1.1-3.6C4.5 15.1 3.5 13.4 3.5 11.5c0-3.9 3.8-7 8.5-7z"/></svg></b>
+          <b><svg viewBox="0 0 24 24"><path d="M4 20l1.2-4.6L15.6 5a2.1 2.1 0 0 1 3 3L8.2 18.4z"/></svg></b>
+          <b><svg viewBox="0 0 24 24"><rect x="3" y="6.5" width="13" height="11" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3"/></svg></b>
+          <b><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.2M12 7.6v.1"/></svg></b>
+          <b class="x"><svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></b>
+        </div>
+        <div class="traco"></div>
+        <div class="cartao-chat">
+          <b>Mensagens</b>
+          <div class="balao ele">Pode olhar a impressora?</div>
+          <div class="balao eu">Já estou acessando 👍</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="recursos">
+    <div class="envolve">
+      <h2>Tudo o que você precisa para ajudar à distância.</h2>
+      <p class="lead">Uma barrinha discreta no topo da tela reúne todas as funções. Recolha quando quiser.</p>
+      <div class="grade">
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#5ac8fa,#007aff)"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8.5 20h7M12 16.5V20"/></svg></div><h3>Acesso remoto</h3><p>Veja e controle o outro computador em alta qualidade, com os dois mouses visíveis.</p></div>
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#5ef08a,#30d158)"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></div><h3>Ligação e vídeo</h3><p>Ligue para outro computador como no FaceTime, com câmera, microfone e tela compartilhada.</p></div>
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#ffd60a,#ff9f0a)"><svg viewBox="0 0 24 24"><path d="M12 4.5c4.7 0 8.5 3.1 8.5 7s-3.8 7-8.5 7c-.9 0-1.8-.1-2.6-.3L5 20l1.1-3.6C4.5 15.1 3.5 13.4 3.5 11.5c0-3.9 3.8-7 8.5-7z"/></svg></div><h3>Chat em tempo real</h3><p>Mensagens com som e aviso de não lidas, que abrem sozinhas na hora.</p></div>
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#ff6b6b,#ff3b30)"><svg viewBox="0 0 24 24"><path d="M4 20l1.2-4.6L15.6 5a2.1 2.1 0 0 1 3 3L8.2 18.4z"/><path d="M14 6.6l3 3"/></svg></div><h3>Lousa na tela</h3><p>Desenhe e aponte por cima da tela; os dois lados veem a mesma anotação.</p></div>
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#d68cff,#bf5af2)"><svg viewBox="0 0 24 24"><path d="M20.5 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8"/></svg></div><h3>Envio de arquivos</h3><p>Arraste arquivos para a barrinha e eles chegam do outro lado.</p></div>
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#8e8e93,#48484a)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.2M12 7.6v.1"/></svg></div><h3>Informações da conexão</h3><p>Latência, qualidade e o caminho da conexão, além de CPU, memória e disco dos dois lados.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="seguranca">
+    <div class="envolve">
+      <h2>Ninguém entra sem você deixar.</h2>
+      <p class="lead">O SSAdesk conecta os computadores direto, sem servidor no meio guardando suas sessões.</p>
+      <div class="grade">
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#5ef08a,#30d158)"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg></div><h3>Ponta a ponta</h3><p>Toda a conexão passa por um túnel criptografado entre os dois computadores.</p></div>
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#5ac8fa,#007aff)"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h3>Pedido de permissão</h3><p>Quem recebe o acesso vê quem quer entrar e escolhe o que liberar: tela, arquivos, chamada e chat.</p></div>
+        <div class="card"><div class="ic" style="background:linear-gradient(180deg,#ff6b6b,#ff3b30)"><svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></div><h3>Você encerra quando quiser</h3><p>Um clique no X fecha tudo dos dois lados. "Permitir sempre" pode ser revogado nos Ajustes.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="baixar">
+    <div class="envolve">
+      <h2>Baixe o SSAdesk.</h2>
+      <p class="lead">Grátis. Instale nos dois computadores e conecte pelo código de 9 dígitos.</p>
+      <div class="downloads">
+        <div class="so" id="cartaoWin">
+          <header><svg viewBox="0 0 24 24"><path d="M3 5.1l7.4-1v7.2H3zM11.3 4l9.7-1.4v8.7h-9.7zM3 12.6h7.4v7.2L3 18.9zM11.3 12.6H21v8.8l-9.7-1.4z"/></svg><h3>Windows</h3></header>
+          <p>Para Windows 10 e 11. Acessa e pode ser acessado. O instalador configura tudo sozinho.</p>
+          <div class="opcoes">
+            <a class="pilula baixar principal" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-Setup.exe">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Baixar para Windows</a>
+          </div>
+          <small>Arquivo .exe · cerca de 165 MB</small>
+        </div>
+        <div class="so" id="cartaoMac">
+          <header><svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.8-3.5.8-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.6zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.7-1.3z"/></svg><h3>Mac</h3></header>
+          <p>Para macOS 12 ou mais novo. Nesta primeira versão, o Mac acessa computadores Windows.</p>
+          <div class="opcoes">
+            <a class="pilula baixar principal" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-mac-arm64.dmg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Mac com chip Apple (M1, M2…)</a>
+            <a class="pilula baixar secundario" href="https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-mac-x64.dmg">Mac com processador Intel</a>
+          </div>
+          <small>Arquivo .dmg · Não sabe qual? Menu  › Sobre Este Mac.</small>
+        </div>
+      </div>
+
+      <div class="passos">
+        <div class="passo"><h3>Instale</h3><p>No Windows, abra o instalador. No Mac, arraste o SSAdesk para Aplicativos.</p></div>
+        <div class="passo"><h3>Digite o código</h3><p>Cada computador tem um código de 9 dígitos. Digite o do outro e clique em Acesso remoto.</p></div>
+        <div class="passo"><h3>Permitir</h3><p>Do outro lado, a pessoa clica em Permitir. Pronto, vocês estão conectados.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ajuda" style="padding-top:20px">
+    <div class="envolve">
+      <h2>Perguntas frequentes</h2>
+      <details><summary>O Mac diz que o desenvolvedor não foi identificado</summary>
+        <p>Isso acontece porque o SSAdesk ainda não tem a assinatura paga da Apple. Para abrir na primeira vez:</p>
+        <ol><li>Abra a pasta Aplicativos, clique no SSAdesk com o botão direito e escolha <b>Abrir</b>, depois <b>Abrir</b> de novo.</li>
+        <li>No macOS 15 ou mais novo: tente abrir uma vez, vá em <b>Ajustes do Sistema › Privacidade e Segurança</b> e clique em <b>Abrir Mesmo Assim</b>.</li></ol>
+        <p>Só é preciso fazer isso uma vez.</p></details>
+      <details><summary>O Windows mostrou "O Windows protegeu o computador"</summary>
+        <p>Clique em <b>Mais informações</b> e depois em <b>Executar assim mesmo</b>. O aviso aparece em programas novos que ainda não têm muitos downloads.</p></details>
+      <details><summary>Precisa de internet ou de configurar o roteador?</summary>
+        <p>Não precisa configurar nada. Na mesma rede, a conexão é direta; pela internet, o SSAdesk encontra o caminho sozinho, inclusive em redes com CGNAT.</p></details>
+      <details><summary>É grátis?</summary>
+        <p>Sim. O SSAdesk é gratuito e é feito pela SSA Comércio.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="envolve">© <span id="ano">2026</span> SSA Comércio · SSAdesk</div>
+</footer>
+
+<script>
+document.getElementById('ano').textContent = new Date().getFullYear()
+// Destaca o sistema de quem está visitando
+const ua = navigator.userAgent
+const ehMac = /Macintosh|Mac OS X/.test(ua) && !/iPhone|iPad/.test(ua)
+const ehWin = /Windows/.test(ua)
+const principal = document.getElementById('botaoPrincipal')
+if (ehWin) {
+  document.getElementById('cartaoWin').classList.add('destaque')
+  principal.href = 'https://github.com/SSA212121/ssadesk/releases/latest/download/SSAdesk-Setup.exe'
+  document.getElementById('textoPrincipal').textContent = 'Baixar para Windows'
+  document.getElementById('notaSo').textContent = 'Windows 10 e 11 · também disponível para Mac.'
+} else if (ehMac) {
+  document.getElementById('cartaoMac').classList.add('destaque')
+  document.getElementById('textoPrincipal').textContent = 'Baixar para Mac'
+  document.getElementById('notaSo').textContent = 'macOS 12 ou mais novo · escolha chip Apple ou Intel.'
+}
+</script>
+</body>
+</html>
